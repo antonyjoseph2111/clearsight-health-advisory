@@ -135,8 +135,8 @@ class AQIService {
     async _fetchCPCBXml() {
         // Proxy logic (kept as fallback)
         const proxies = [
-            `https://corsproxy.io/?${encodeURIComponent(CONFIG.CPCB_RSS_URL)}`,
-            `https://api.allorigins.win/raw?url=${encodeURIComponent(CONFIG.CPCB_RSS_URL)}`
+            `https://api.allorigins.win/raw?url=${encodeURIComponent(CONFIG.CPCB_RSS_URL)}`,
+            `https://corsproxy.io/?${encodeURIComponent(CONFIG.CPCB_RSS_URL)}`
         ];
         for (const proxyUrl of proxies) {
             try {
