@@ -2,7 +2,7 @@
 const CONFIG = {
     // Gemini AI API Configuration
     GEMINI_API_KEY: 'AIzaSyAXsWb5tOxtC1FKMIUT0lftcEKvfRz_mPU', // REPLACE WITH YOUR VALID API KEY
-    GEMINI_API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent',
+    GEMINI_API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
 
     // OpenAQ API Configuration
     OPENAQ_API_URL: 'https://api.openaq.org/v2',
