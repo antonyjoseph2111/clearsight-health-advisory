@@ -30,7 +30,7 @@ class AQIService {
                 console.log('Attempting to fetch from Curated Stations JSON...');
                 const stations = await this._fetchStaticStations();
                 if (stations && stations.length > 0) {
-                    aqiData = this._findNearestValidStation(stations, lat, lon);
+                    aqiData = this._findNearestValidStation(stations, lat, lon, true); // True = Strict Mode (Must have pollutants)
                     if (aqiData) console.log('Found station in curated list!');
                 }
             } catch (staticError) {
@@ -123,18 +123,13 @@ class AQIService {
             lastUpdate: s.last_update,
             // CRITICAL: Use the pre-calculated authoritative AQI from the source
             aqi: parseInt(s.aqi, 10) || 0
-        })).filter(s => {
-            // Filter out stations that have AQI but NO pollutant data (prevent 0 values in UI)
-            const hasPollutants = s.pm25 > 0 || s.pm10 > 0 ||
-                Object.values(s.pollutants).some(v => parseFloat(v) > 0);
-            return s.aqi > 0 && hasPollutants;
-        });
+        }));
     }
 
     async getCPCBData(lat, lon) {
         const xmlText = await this._fetchCPCBXml();
         const stations = this._parseAllStations(xmlText);
-        return this._findNearestValidStation(stations, lat, lon);
+        return this._findNearestValidStation(stations, lat, lon, true); // Strict mode
     }
 
     async _fetchCPCBXml() {
@@ -199,7 +194,7 @@ class AQIService {
         return stations;
     }
 
-    _findNearestValidStation(stations, lat, lon) {
+    _findNearestValidStation(stations, lat, lon, requirePollutants = false) {
         // Robust 10/25/50km Logic
         const allCandidates = stations.map(s => ({
             ...s,
@@ -208,7 +203,16 @@ class AQIService {
             aqi: s.aqi || Math.max(s.pm25 || 0, s.pm10 || 0)
         }));
 
-        const activeStations = allCandidates.filter(s => s.aqi > 0);
+        let activeStations = allCandidates.filter(s => s.aqi > 0);
+
+        // Strict Filter: Only for Advisory (prevents 0 pollutant values)
+        if (requirePollutants) {
+            activeStations = activeStations.filter(s =>
+                s.pm25 > 0 || s.pm10 > 0 ||
+                (s.pollutants && Object.values(s.pollutants).some(v => parseFloat(v) > 0))
+            );
+        }
+
         const radii = [10, 25, 50, 100]; // Added 100km fallback for sparse curated list
 
         for (const radius of radii) {
