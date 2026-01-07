@@ -96,13 +96,21 @@ class FirebaseService {
                 this.isGuestMode = true; // Enable Guest Mode
 
                 // Return a mock guest user so the app can continue working
+                console.log("Using Guest Mode (Local Storage) for session.");
                 return {
                     uid: 'guest_' + Date.now(),
                     isAnonymous: true,
                     isGuest: true
                 };
             }
-            throw error;
+            // For any other auth error, also fallback to guest mode to prevent app blocking
+            console.warn("Auth failed, switching to Guest Mode:", error.code);
+            this.isGuestMode = true;
+            return {
+                uid: 'guest_' + (localStorage.getItem('device_uid') || Date.now()),
+                isAnonymous: true,
+                isGuest: true
+            };
         }
     }
 }
