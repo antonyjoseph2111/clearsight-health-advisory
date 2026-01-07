@@ -90,7 +90,6 @@ class FirebaseService {
                 isAnonymous: userCredential.user.isAnonymous
             };
         } catch (error) {
-        } catch (error) {
             // Check for expected configuration errors and handle silently
             const isConfigError = error.code === 'auth/configuration-not-found' ||
                 error.code === 'auth/operation-not-allowed' ||
