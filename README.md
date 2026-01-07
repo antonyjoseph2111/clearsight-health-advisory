@@ -28,22 +28,35 @@ An AI-powered health advisory system enabling users to get personalized health r
 ## Configuration
 
 - **API Keys**: preset in `config.js`
-- **Storage**: Uses Browser LocalStorage for offline capability.
+- **Firebase**: Currently set to Mock Mode (Local Storage) for immediate use without backend setup. 
+  - To enable real Firebase: Update `firebase-config.js` with your project credentials.
 
 ## Troubleshooting
 
-### 1. Gemini API Error 404
-If AI insights fail:
-1. Ensure your API Key in `config.js` is valid and has access to `gemini-1.5-flash`.
-2. Get a key from [Google AI Studio](https://makersuite.google.com/app/apikey).
+### 1. Firebase Authentication Error
+If you see `auth/configuration-not-found`, you must enable **Anonymous Authentication**:
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Select your project (`clear-sight0`)
+3. Go to **Authentication** > **Sign-in method**
+4. Enable **Anonymous** provider
 
-### 2. Data Not Loading (CORS)
+### 2. Gemini API Error 404
 If AI insights fail:
 1. Ensure your API Key in `config.js` is valid and has access to `gemini-1.5-flash`.
 2. Get a key from [Google AI Studio](https://makersuite.google.com/app/apikey).
 
 ### 3. Data Not Loading (CORS)
-OpenAQ API may be blocked by browser CORS policies on deployed sites. The app automatically falls back to **Mock Data** so you can still experience the UI. For real data, a backend proxy is required.
+### 3. Data Not Loading (CORS / Proxy Errors)
+If you see `Access to fetch... blocked by CORS` or `403` on the live site:
+- **Solution**: This app includes a fallback to `rss_feed.xml`. Ensure this file is present in your deployment.
+- The app tries 3 methods:
+  1. `selected_stations.json` (Static curated list)
+  2. Live CPCB RSS via Proxies (`corsproxy.io`, `allorigins.win`)
+  3. **Fallback**: Local `rss_feed.xml` (Ensure this file is in your root folder!)
+
+### 4. Deployment on Render/Vercel
+- **Authorized Domains**: If using Firebase, go to Firebase Console -> Authentication -> Settings -> Authorized Domains and add your Render domain (e.g., `clearsight-health-advisory.onrender.com`).
+- **Mixed Content**: The app uses HTTPS. Ensure all API calls (config.js) use `https://`.
 
 ## Technologies
 
