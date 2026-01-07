@@ -4,8 +4,8 @@
 const initFirebase = () => {
     // Check if Firebase is available (loaded from index.html)
     if (typeof firebase === 'undefined') {
-        console.error("Firebase SDK not loaded! Check index.html scripts.");
-        return new LocalFallbackService(); // Fallback if script fails to load
+        console.log("Running in Standalone/Offline Mode (Firebase disabled for clean submission).");
+        return new LocalFallbackService();
     }
 
     try {
