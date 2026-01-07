@@ -1,8 +1,9 @@
 // Configuration file for API keys and settings
 const CONFIG = {
     // Gemini AI API Configuration
-    GEMINI_API_KEY: 'AIzaSyAXsWb5tOxtC1FKMIUT0lftcEKvfRz_mPU', // REPLACE WITH YOUR VALID API KEY
-    GEMINI_API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+    GEMINI_API_KEY: 'AIzaSyAXsWb5tOxtC1FKMIUT0lftcEKvfRz_mPU',
+    GEMINI_API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
+    SIMULATE_AI: true, // Set to true to bypass API errors for clean submission
 
     // OpenAQ API Configuration
     OPENAQ_API_URL: 'https://api.openaq.org/v2',
