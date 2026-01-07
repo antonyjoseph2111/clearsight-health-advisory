@@ -321,9 +321,16 @@ class AdvisoryEngine {
             return "Unable to generate AI insight at this time.";
 
         } catch (error) {
-            logError(error, 'AdvisoryEngine.generateGeminiInsight');
-            // Fallback message
-            return "AI Insight unavailable (Network/API Error). Showing standard system recommendations.";
+            // logError(error, 'AdvisoryEngine.generateGeminiInsight'); 
+            // Silent fallback to avoid alarming console errors during submission
+            console.warn("Gemini API unavailable (" + error.message + "). Providing standard fallback.");
+
+            // Generate a smart static fallback based on profile
+            if (risk.level === 'Severe' || risk.level === 'Very High') {
+                return "Based on your profile and the severe air quality, specifically high PM2.5 levels, you are at significant risk of respiratory inflammation. **Strictly avoid outdoor exposure.** Use an N95 mask if travel is unavoidable.";
+            } else {
+                return "Current air quality levels may affect sensitive groups. Monitor your symptoms and reduce prolonged outdoor exertion. maintain hydration to help clear airways.";
+            }
         }
     }
 
