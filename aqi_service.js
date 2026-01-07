@@ -123,7 +123,12 @@ class AQIService {
             lastUpdate: s.last_update,
             // CRITICAL: Use the pre-calculated authoritative AQI from the source
             aqi: parseInt(s.aqi, 10) || 0
-        }));
+        })).filter(s => {
+            // Filter out stations that have AQI but NO pollutant data (prevent 0 values in UI)
+            const hasPollutants = s.pm25 > 0 || s.pm10 > 0 ||
+                Object.values(s.pollutants).some(v => parseFloat(v) > 0);
+            return s.aqi > 0 && hasPollutants;
+        });
     }
 
     async getCPCBData(lat, lon) {
