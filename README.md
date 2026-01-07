@@ -40,6 +40,8 @@ If you see `auth/configuration-not-found`, you must enable **Anonymous Authentic
 3. Go to **Authentication** > **Sign-in method**
 4. Enable **Anonymous** provider
 
+> **Note:** A `400 (Bad Request)` network error in the console regarding `identitytoolkit` is **expected** if Anonymous Auth is disabled. The app will automatically catch this and switch to **Guest Mode (Offline Support)**. You will see a notification confirming this.
+
 ### 2. Gemini API Error 404
 If AI insights fail:
 1. Ensure your API Key in `config.js` is valid and has access to `gemini-1.5-flash`.

@@ -107,6 +107,11 @@ class App {
                 this.prefillForm(savedProfile);
                 this.currentProfile = savedProfile;
             }
+
+            if (this.currentUser.isGuest) {
+                this.showNotification("Guest Mode Active (Offline/Restricted Network)", "warning");
+                console.log("App running in Guest Mode");
+            }
         } catch (error) {
             logError(error, 'App.init');
         }
