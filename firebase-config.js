@@ -90,21 +90,21 @@ class FirebaseService {
                 isAnonymous: userCredential.user.isAnonymous
             };
         } catch (error) {
-            console.error("Error signing in anonymously:", error);
-            if (error.code === 'auth/configuration-not-found' || error.code === 'auth/operation-not-allowed') {
-                console.warn("⚠️ Firebase Auth not configured. Falling back to Guest Mode.");
-                this.isGuestMode = true; // Enable Guest Mode
+        } catch (error) {
+            // Check for expected configuration errors and handle silently
+            const isConfigError = error.code === 'auth/configuration-not-found' ||
+                error.code === 'auth/operation-not-allowed' ||
+                error.code === 'auth/admin-restricted-operation' ||
+                error.code === 'auth/project-not-found';
 
-                // Return a mock guest user so the app can continue working
-                console.log("Using Guest Mode (Local Storage) for session.");
-                return {
-                    uid: 'guest_' + Date.now(),
-                    isAnonymous: true,
-                    isGuest: true
-                };
+            if (isConfigError) {
+                console.warn("Firebase Auth not fully configured. Using Guest Mode.");
+            } else {
+                // Only log unexpected errors
+                console.warn("Auth negotiation failed, switching to Guest Mode:", error.code);
             }
-            // For any other auth error, also fallback to guest mode to prevent app blocking
-            console.warn("Auth failed, switching to Guest Mode:", error.code);
+
+            // Common Fallback Strategy
             this.isGuestMode = true;
             return {
                 uid: 'guest_' + (localStorage.getItem('device_uid') || Date.now()),
